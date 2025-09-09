@@ -1,0 +1,23 @@
+# Ignore large audio files in git
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.ogg
+*.aac
+*.wma
+
+# Keep directory structure but ignore content
+test_tracks/*
+!test_tracks/.gitkeep
+sample_mixes/*
+!sample_mixes/.gitkeep
+reference_tracks/*
+!reference_tracks/.gitkeep
+user_uploads/*
+!user_uploads/.gitkeep
+
+# Keep metadata files
+*.json
+*.txt
+*.md

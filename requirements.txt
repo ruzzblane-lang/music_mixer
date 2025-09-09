@@ -1,0 +1,15 @@
+librosa>=0.10.1
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.3.0
+pydub>=0.25.1
+ffmpeg-python>=0.2.0
+click>=8.1.0
+colorama>=0.4.6
+tqdm>=4.65.0
+psutil>=5.9.0
+pytest>=7.0.0
+pytest-cov>=4.0.0
+sounddevice>=0.4.6
+pyaudio>=0.2.11
+python-vlc>=3.0.0

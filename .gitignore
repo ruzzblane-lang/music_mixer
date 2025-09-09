@@ -1,0 +1,133 @@
+# AI Music Mixer - .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project Specific
+# Music files (user's personal music)
+music_files/test_tracks/
+music_files/user_uploads/
+music_files/sample_mixes/
+music_files/reference_tracks/
+
+# Database files (may contain personal data)
+*.db
+*.sqlite
+*.sqlite3
+data/
+databases/
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+*.cache
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Audio processing temporary files
+*.wav.tmp
+*.mp3.tmp
+
+# Model files (large ML models)
+models/
+*.pkl
+*.joblib
+*.h5
+*.pb
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# VLC temporary files
+*.vlc
+
+# Audio analysis cache
+analysis_cache/
+feature_cache/
+
+# Streaming temporary files
+stream_temp/
+streaming_cache/
+
+# Performance monitoring
+performance_logs/
+metrics/
+
+# Backup files
+*.bak
+*.backup
+backup/
+
+# Configuration files with sensitive data
+config_local.py
+secrets.py
+api_keys.py
