@@ -236,6 +236,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ and AI by [Your Name]**
+**Made with ❤️ and AI by Bane**
 
 *"Where music meets intelligence"* 🎵🤖
