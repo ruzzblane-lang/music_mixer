@@ -7,6 +7,7 @@ music track information and features.
 
 import sqlite3
 import logging
+import json
 from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 
@@ -179,6 +180,27 @@ class MusicDatabase:
             conn.commit()
             return cursor.rowcount > 0
     
+    def _parse_track_data(self, row_dict: Dict) -> Dict:
+        """
+        Parse track data from database, converting JSON strings back to objects.
+        
+        Args:
+            row_dict: Dictionary from database row
+            
+        Returns:
+            Parsed track data
+        """
+        try:
+            # Parse MFCC means from JSON
+            if 'mfcc_means' in row_dict and row_dict['mfcc_means']:
+                if isinstance(row_dict['mfcc_means'], str):
+                    row_dict['mfcc_means'] = json.loads(row_dict['mfcc_means'])
+        except (json.JSONDecodeError, TypeError) as e:
+            logger.warning(f"Error parsing MFCC data: {e}")
+            row_dict['mfcc_means'] = []
+        
+        return row_dict
+    
     def get_track_by_path(self, file_path: str) -> Optional[Dict]:
         """
         Get track information by file path.
@@ -197,7 +219,7 @@ class MusicDatabase:
             row = cursor.fetchone()
             
             if row:
-                return dict(row)
+                return self._parse_track_data(dict(row))
             return None
     
     def get_track_by_id(self, track_id: int) -> Optional[Dict]:
@@ -218,7 +240,7 @@ class MusicDatabase:
             row = cursor.fetchone()
             
             if row:
-                return dict(row)
+                return self._parse_track_data(dict(row))
             return None
     
     def search_tracks(self, query: str, limit: int = 10) -> List[Dict]:
@@ -245,7 +267,7 @@ class MusicDatabase:
             ''', (search_pattern, search_pattern, limit))
             
             rows = cursor.fetchall()
-            return [dict(row) for row in rows]
+            return [self._parse_track_data(dict(row)) for row in rows]
     
     def get_tracks_by_tempo_range(self, min_tempo: float, max_tempo: float) -> List[Dict]:
         """
@@ -269,7 +291,7 @@ class MusicDatabase:
             ''', (min_tempo, max_tempo))
             
             rows = cursor.fetchall()
-            return [dict(row) for row in rows]
+            return [self._parse_track_data(dict(row)) for row in rows]
     
     def get_tracks_by_key(self, key: str) -> List[Dict]:
         """
@@ -287,7 +309,7 @@ class MusicDatabase:
             
             cursor.execute('SELECT * FROM tracks WHERE key = ?', (key,))
             rows = cursor.fetchall()
-            return [dict(row) for row in rows]
+            return [self._parse_track_data(dict(row)) for row in rows]
     
     def get_all_tracks(self, limit: Optional[int] = None) -> List[Dict]:
         """
@@ -309,7 +331,7 @@ class MusicDatabase:
                 cursor.execute('SELECT * FROM tracks ORDER BY title')
             
             rows = cursor.fetchall()
-            return [dict(row) for row in rows]
+            return [self._parse_track_data(dict(row)) for row in rows]
     
     def get_library_stats(self) -> Dict:
         """
@@ -393,4 +415,4 @@ class MusicDatabase:
             ''', (limit,))
             
             rows = cursor.fetchall()
-            return [dict(row) for row in rows]
+            return [self._parse_track_data(dict(row)) for row in rows]

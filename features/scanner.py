@@ -8,6 +8,7 @@ and storing them in a database for later use.
 import os
 import sqlite3
 import logging
+import json
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from tqdm import tqdm
@@ -164,7 +165,7 @@ class MusicScanner:
             'onset_strength': features['onset_strength'],
             'tempo_stability': features['tempo_stability'],
             'spectral_contrast': features['spectral_contrast'],
-            'mfcc_means': ','.join(map(str, features['mfcc_means'])),
+            'mfcc_means': json.dumps(features['mfcc_means']),
             'last_analyzed': int(time.time())
         }
         

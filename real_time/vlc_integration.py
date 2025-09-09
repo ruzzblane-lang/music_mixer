@@ -288,7 +288,7 @@ class VLCIntegration:
             if tracks:
                 # Load first track
                 first_track = tracks[0]
-                file_path = first_track.get('file_path', first_track.get('file_path'))
+                file_path = first_track.get('file_path')
                 
                 if file_path and os.path.exists(file_path):
                     self.vlc_player.load_track(file_path, first_track)
@@ -320,7 +320,7 @@ class VLCIntegration:
             if self.current_playlist_index < len(self.playlist) - 1:
                 self.current_playlist_index += 1
                 next_track = self.playlist[self.current_playlist_index]
-                file_path = next_track.get('file_path', next_track.get('file_path'))
+                file_path = next_track.get('file_path')
                 
                 if file_path and os.path.exists(file_path):
                     # Use crossfade if available
@@ -345,7 +345,7 @@ class VLCIntegration:
             if self.current_playlist_index > 0:
                 self.current_playlist_index -= 1
                 prev_track = self.playlist[self.current_playlist_index]
-                file_path = prev_track.get('file_path', prev_track.get('file_path'))
+                file_path = prev_track.get('file_path')
                 
                 if file_path and os.path.exists(file_path):
                     self.vlc_player.load_track(file_path, prev_track)
@@ -379,7 +379,7 @@ class VLCIntegration:
             mix_type = suggestion['mix_type']
             transition_time = suggestion['transition_time']
             
-            file_path = track.get('file_path', track.get('file_path'))
+            file_path = track.get('file_path')
             if not file_path or not os.path.exists(file_path):
                 logger.error("Track file not found")
                 return False

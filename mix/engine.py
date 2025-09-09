@@ -13,6 +13,7 @@ from typing import Dict, List, Optional, Tuple
 import logging
 import tempfile
 import os
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -20,17 +21,62 @@ logger = logging.getLogger(__name__)
 class MixingEngine:
     """Handles audio mixing and transition effects."""
     
-    def __init__(self, sample_rate: int = 44100):
+    def __init__(self, sample_rate: int = 44100, max_file_size_mb: int = 500):
         """
         Initialize the mixing engine.
         
         Args:
             sample_rate: Sample rate for audio processing
+            max_file_size_mb: Maximum file size in MB for security
         """
         self.sample_rate = sample_rate
+        self.max_file_size_mb = max_file_size_mb
         self.current_track = None
         self.next_track = None
         self.mix_position = 0.0
+        
+        # Supported audio formats
+        self.supported_formats = {'.mp3', '.wav', '.flac', '.m4a', '.aac', '.ogg', '.wma'}
+    
+    def _validate_file_path(self, file_path: str) -> bool:
+        """
+        Validate file path for security and format.
+        
+        Args:
+            file_path: Path to validate
+            
+        Returns:
+            True if valid, False otherwise
+        """
+        try:
+            path = Path(file_path).resolve()
+            
+            # Check if file exists
+            if not path.exists():
+                logger.error(f"File does not exist: {file_path}")
+                return False
+            
+            # Check if it's a file (not directory)
+            if not path.is_file():
+                logger.error(f"Path is not a file: {file_path}")
+                return False
+            
+            # Check file extension
+            if path.suffix.lower() not in self.supported_formats:
+                logger.error(f"Unsupported file format: {path.suffix}")
+                return False
+            
+            # Check file size
+            file_size_mb = path.stat().st_size / (1024 * 1024)
+            if file_size_mb > self.max_file_size_mb:
+                logger.error(f"File too large: {file_size_mb:.1f}MB > {self.max_file_size_mb}MB")
+                return False
+            
+            return True
+            
+        except (OSError, ValueError) as e:
+            logger.error(f"Error validating file path {file_path}: {e}")
+            return False
     
     def load_track(self, file_path: str) -> AudioSegment:
         """
@@ -41,7 +87,15 @@ class MixingEngine:
             
         Returns:
             AudioSegment object
+            
+        Raises:
+            ValueError: If file path is invalid or file is too large
+            FileNotFoundError: If file doesn't exist
         """
+        # Validate file path first
+        if not self._validate_file_path(file_path):
+            raise ValueError(f"Invalid file path: {file_path}")
+        
         try:
             # Load with pydub
             audio = AudioSegment.from_file(file_path)
@@ -291,6 +345,11 @@ class MixingEngine:
             Dictionary with track information
         """
         try:
+            # Validate file path first
+            if not self._validate_file_path(file_path):
+                logger.error(f"Invalid file path: {file_path}")
+                return {}
+            
             audio = self.load_track(file_path)
             
             return {
